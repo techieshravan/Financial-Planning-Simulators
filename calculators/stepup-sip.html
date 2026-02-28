@@ -1,0 +1,155 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Step-up SIP Calculator — FinSim</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="../css/main.css" />
+  <script defer src="../js/chart.umd.min.js"></script>
+  <script defer src="../js/main.js"></script>
+  <script defer src="../js/stepup-sip.js"></script>
+</head>
+<body>
+
+  <header class="navbar">
+    <div class="container navbar__inner">
+      <a href="../index.html" class="navbar__brand">
+        <span class="brand-icon">◈</span>
+        <span class="brand-name">FinSim</span>
+      </a>
+      <nav class="navbar__links">
+        <a href="../index.html#calculators">Calculators</a>
+      </nav>
+      <button class="theme-toggle" id="themeToggle" aria-label="Toggle theme">
+        <span class="theme-icon">☀</span>
+      </button>
+    </div>
+  </header>
+
+  <div class="container">
+    <div class="page-header">
+      <a href="../index.html" class="back-link">← Back to all calculators</a>
+      <p class="page-header__eyebrow">Step-up SIP Calculator</p>
+      <h1 class="page-header__title">Step-up Systematic Investment Plan</h1>
+      <p class="page-header__subtitle">Increase your SIP amount each year to keep pace with income growth and maximise long-term wealth.</p>
+    </div>
+
+    <div class="calc-layout">
+
+      <aside class="inputs-panel">
+        <p class="inputs-panel__title">Parameters</p>
+
+        <div class="form-group">
+          <div class="form-label">
+            <span>Initial Monthly SIP</span>
+            <span class="form-label-value" id="lblMonthly">₹5,000</span>
+          </div>
+          <div class="range-wrap">
+            <input type="range" id="sliderMonthly" min="500" max="100000" step="500" value="5000" />
+            <div class="range-ticks"><span>₹500</span><span>₹50K</span><span>₹1L</span></div>
+          </div>
+          <input type="number" id="inputMonthly" class="form-input" style="margin-top:.75rem" min="500" max="100000" step="500" value="5000" />
+        </div>
+
+        <div class="form-group">
+          <div class="form-label">
+            <span>Annual Step-up Rate</span>
+            <span class="form-label-value" id="lblStepup">10%</span>
+          </div>
+          <div class="range-wrap">
+            <input type="range" id="sliderStepup" min="0" max="50" step="1" value="10" />
+            <div class="range-ticks"><span>0%</span><span>25%</span><span>50%</span></div>
+          </div>
+          <input type="number" id="inputStepup" class="form-input" style="margin-top:.75rem" min="0" max="50" step="1" value="10" />
+        </div>
+
+        <div class="form-group">
+          <div class="form-label">
+            <span>Expected Annual Return</span>
+            <span class="form-label-value" id="lblRate">12%</span>
+          </div>
+          <div class="range-wrap">
+            <input type="range" id="sliderRate" min="1" max="30" step="0.5" value="12" />
+            <div class="range-ticks"><span>1%</span><span>15%</span><span>30%</span></div>
+          </div>
+          <input type="number" id="inputRate" class="form-input" style="margin-top:.75rem" min="1" max="30" step="0.5" value="12" />
+        </div>
+
+        <div class="form-group">
+          <div class="form-label">
+            <span>Investment Period</span>
+            <span class="form-label-value" id="lblYears">15 yrs</span>
+          </div>
+          <div class="range-wrap">
+            <input type="range" id="sliderYears" min="1" max="40" step="1" value="15" />
+            <div class="range-ticks"><span>1yr</span><span>20yr</span><span>40yr</span></div>
+          </div>
+          <input type="number" id="inputYears" class="form-input" style="margin-top:.75rem" min="1" max="40" step="1" value="15" />
+        </div>
+
+        <div style="padding:1rem;background:rgba(99,102,241,0.08);border:1px solid rgba(99,102,241,0.2);border-radius:.75rem;margin-top:.5rem;">
+          <p style="font-size:.75rem;font-weight:600;color:#a5b4fc;text-transform:uppercase;letter-spacing:.05em;margin-bottom:.5rem;">vs Regular SIP</p>
+          <p style="font-size:.8rem;color:var(--color-text-muted);">Regular SIP total value:</p>
+          <p style="font-size:1.1rem;font-weight:700;color:var(--color-text);" id="regularSIPValue">—</p>
+          <p style="font-size:.75rem;color:#10b981;font-weight:600;margin-top:.25rem;" id="extraGain">+0% extra with step-up</p>
+        </div>
+      </aside>
+
+      <div class="results-panel">
+
+        <div class="results-summary">
+          <div class="result-card">
+            <div class="result-card__label">Total Invested</div>
+            <div class="result-card__value" id="resInvested">—</div>
+          </div>
+          <div class="result-card">
+            <div class="result-card__label">Est. Returns</div>
+            <div class="result-card__value" id="resReturns">—</div>
+          </div>
+          <div class="result-card result-card--highlight">
+            <div class="result-card__label">Total Value</div>
+            <div class="result-card__value" id="resTotal">—</div>
+          </div>
+        </div>
+
+        <div class="chart-wrap">
+          <div class="chart-wrap__title">Step-up vs Regular SIP Growth</div>
+          <div style="position:relative;width:100%;height:280px;">
+            <canvas id="lineChart"></canvas>
+          </div>
+        </div>
+
+        <div class="table-wrap">
+          <div class="table-wrap__title">Year-by-Year Breakdown</div>
+          <div style="max-height:360px;overflow-y:auto;">
+            <table class="data-table">
+              <thead>
+                <tr>
+                  <th>Year</th>
+                  <th>Monthly SIP</th>
+                  <th>Invested</th>
+                  <th>Returns</th>
+                  <th>Total Value</th>
+                </tr>
+              </thead>
+              <tbody id="yearlyTable"></tbody>
+            </table>
+          </div>
+        </div>
+
+      </div>
+    </div>
+  </div>
+
+  <footer class="footer" style="margin-top:3rem;">
+    <div class="container footer__inner">
+      <span class="brand-name" style="font-size:1rem;">◈ FinSim</span>
+      <span class="footer__note">For educational purposes only. Not financial advice.</span>
+    </div>
+  </footer>
+
+</body>
+</html>

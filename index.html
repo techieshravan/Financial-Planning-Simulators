@@ -1,0 +1,158 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>FinSim — Financial Planning Simulators</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="css/main.css" />
+</head>
+<body>
+
+  <!-- ── Nav ───────────────────────────────────────────────── -->
+  <header class="navbar">
+    <div class="container navbar__inner">
+      <a href="index.html" class="navbar__brand">
+        <span class="brand-icon">◈</span>
+        <span class="brand-name">FinSim</span>
+      </a>
+      <nav class="navbar__links">
+        <a href="#calculators">Calculators</a>
+        <a href="#about">About</a>
+      </nav>
+      <button class="theme-toggle" id="themeToggle" aria-label="Toggle theme">
+        <span class="theme-icon">☀</span>
+      </button>
+    </div>
+  </header>
+
+  <!-- ── Hero ──────────────────────────────────────────────── -->
+  <section class="hero">
+    <div class="container hero__inner">
+      <div class="hero__badge">Free · Open Source · No Sign-up</div>
+      <h1 class="hero__title">
+        Plan your wealth<br />
+        <span class="gradient-text">with confidence</span>
+      </h1>
+      <p class="hero__subtitle">
+        Powerful, interactive simulators to visualise SIP growth, lumpsum returns,
+        step-up contributions, and more — right in your browser.
+      </p>
+      <a href="#calculators" class="btn btn--primary">Explore Calculators</a>
+    </div>
+    <div class="hero__glow hero__glow--1"></div>
+    <div class="hero__glow hero__glow--2"></div>
+  </section>
+
+  <!-- ── Calculator Grid ───────────────────────────────────── -->
+  <main id="calculators" class="section">
+    <div class="container">
+      <div class="section__header">
+        <h2 class="section__title">Calculators</h2>
+        <p class="section__subtitle">Pick a simulator and start planning</p>
+      </div>
+
+      <div class="calc-grid" id="calcGrid">
+
+        <!-- SIP Calculator -->
+        <a href="calculators/sip.html" class="calc-card">
+          <div class="calc-card__icon" style="--card-color: #6366f1;">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="22 12 18 12 15 21 9 3 6 12 2 12"/></svg>
+          </div>
+          <div class="calc-card__body">
+            <h3 class="calc-card__title">SIP Calculator</h3>
+            <p class="calc-card__desc">Estimate the future value of your monthly Systematic Investment Plan contributions.</p>
+          </div>
+          <div class="calc-card__arrow">→</div>
+        </a>
+
+        <!-- Step-up SIP Calculator -->
+        <a href="calculators/stepup-sip.html" class="calc-card">
+          <div class="calc-card__icon" style="--card-color: #10b981;">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="23 6 13.5 15.5 8.5 10.5 1 18"/><polyline points="17 6 23 6 23 12"/></svg>
+          </div>
+          <div class="calc-card__body">
+            <h3 class="calc-card__title">Step-up SIP Calculator</h3>
+            <p class="calc-card__desc">Model how increasing your SIP amount each year can accelerate wealth creation.</p>
+          </div>
+          <div class="calc-card__arrow">→</div>
+        </a>
+
+        <!-- Lumpsum Calculator -->
+        <a href="calculators/lumpsum.html" class="calc-card">
+          <div class="calc-card__icon" style="--card-color: #f59e0b;">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><path d="M12 8v4l3 3"/></svg>
+          </div>
+          <div class="calc-card__body">
+            <h3 class="calc-card__title">Lumpsum Calculator</h3>
+            <p class="calc-card__desc">Project the growth of a one-time investment over a chosen time horizon.</p>
+          </div>
+          <div class="calc-card__arrow">→</div>
+        </a>
+
+        <!-- Coming Soon placeholder -->
+        <div class="calc-card calc-card--soon">
+          <div class="calc-card__icon" style="--card-color: #64748b;">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>
+          </div>
+          <div class="calc-card__body">
+            <h3 class="calc-card__title">More Coming Soon</h3>
+            <p class="calc-card__desc">Goal planner, EMI calculator, retirement planner and more on the way.</p>
+          </div>
+          <span class="badge">Soon</span>
+        </div>
+
+      </div>
+    </div>
+  </main>
+
+  <!-- ── About ─────────────────────────────────────────────── -->
+  <section id="about" class="section section--alt">
+    <div class="container about-grid">
+      <div>
+        <h2 class="section__title">Why FinSim?</h2>
+        <p class="about__text">
+          All calculations happen locally in your browser — no data leaves your device.
+          Every simulator is built for clarity: interactive charts, clean numbers, and
+          zero clutter.
+        </p>
+      </div>
+      <div class="feature-list">
+        <div class="feature">
+          <span class="feature__icon">🔒</span>
+          <div>
+            <strong>100% Private</strong>
+            <p>No data sent to any server. Everything runs in-browser.</p>
+          </div>
+        </div>
+        <div class="feature">
+          <span class="feature__icon">📊</span>
+          <div>
+            <strong>Visual Insights</strong>
+            <p>Interactive charts to help you understand growth instantly.</p>
+          </div>
+        </div>
+        <div class="feature">
+          <span class="feature__icon">⚡</span>
+          <div>
+            <strong>Instant Results</strong>
+            <p>Results update in real-time as you adjust inputs.</p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ── Footer ────────────────────────────────────────────── -->
+  <footer class="footer">
+    <div class="container footer__inner">
+      <span class="brand-name" style="font-size: 1rem;">◈ FinSim</span>
+      <span class="footer__note">For educational purposes only. Not financial advice.</span>
+    </div>
+  </footer>
+
+  <script src="js/main.js"></script>
+</body>
+</html>

@@ -1,0 +1,143 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>SIP Calculator — FinSim</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="../css/main.css" />
+  <script defer src="../js/chart.umd.min.js"></script>
+  <script defer src="../js/main.js"></script>
+  <script defer src="../js/sip.js"></script>
+</head>
+<body>
+
+  <!-- ── Nav ───────────────────────────────────────────────── -->
+  <header class="navbar">
+    <div class="container navbar__inner">
+      <a href="../index.html" class="navbar__brand">
+        <span class="brand-icon">◈</span>
+        <span class="brand-name">FinSim</span>
+      </a>
+      <nav class="navbar__links">
+        <a href="../index.html#calculators">Calculators</a>
+      </nav>
+      <button class="theme-toggle" id="themeToggle" aria-label="Toggle theme">
+        <span class="theme-icon">☀</span>
+      </button>
+    </div>
+  </header>
+
+  <div class="container">
+    <div class="page-header">
+      <a href="../index.html" class="back-link">← Back to all calculators</a>
+      <p class="page-header__eyebrow">SIP Calculator</p>
+      <h1 class="page-header__title">Systematic Investment Plan</h1>
+      <p class="page-header__subtitle">See how your monthly investments grow over time with the power of compounding.</p>
+    </div>
+
+    <div class="calc-layout">
+
+      <!-- ── Inputs ────────────────────────────────────────── -->
+      <aside class="inputs-panel">
+        <p class="inputs-panel__title">Parameters</p>
+
+        <div class="form-group">
+          <div class="form-label">
+            <span>Monthly Investment</span>
+            <span class="form-label-value" id="lblMonthly">₹5,000</span>
+          </div>
+          <div class="range-wrap">
+            <input type="range" id="sliderMonthly" min="500" max="100000" step="500" value="5000" />
+            <div class="range-ticks"><span>₹500</span><span>₹50K</span><span>₹1L</span></div>
+          </div>
+          <input type="number" id="inputMonthly" class="form-input" style="margin-top:.75rem" min="500" max="100000" step="500" value="5000" />
+        </div>
+
+        <div class="form-group">
+          <div class="form-label">
+            <span>Expected Annual Return</span>
+            <span class="form-label-value" id="lblRate">12%</span>
+          </div>
+          <div class="range-wrap">
+            <input type="range" id="sliderRate" min="1" max="30" step="0.5" value="12" />
+            <div class="range-ticks"><span>1%</span><span>15%</span><span>30%</span></div>
+          </div>
+          <input type="number" id="inputRate" class="form-input" style="margin-top:.75rem" min="1" max="30" step="0.5" value="12" />
+        </div>
+
+        <div class="form-group">
+          <div class="form-label">
+            <span>Investment Period</span>
+            <span class="form-label-value" id="lblYears">15 yrs</span>
+          </div>
+          <div class="range-wrap">
+            <input type="range" id="sliderYears" min="1" max="40" step="1" value="15" />
+            <div class="range-ticks"><span>1yr</span><span>20yr</span><span>40yr</span></div>
+          </div>
+          <input type="number" id="inputYears" class="form-input" style="margin-top:.75rem" min="1" max="40" step="1" value="15" />
+        </div>
+      </aside>
+
+      <!-- ── Results ───────────────────────────────────────── -->
+      <div class="results-panel">
+
+        <div class="results-summary">
+          <div class="result-card">
+            <div class="result-card__label">Invested</div>
+            <div class="result-card__value" id="resInvested">—</div>
+          </div>
+          <div class="result-card">
+            <div class="result-card__label">Est. Returns</div>
+            <div class="result-card__value" id="resReturns">—</div>
+          </div>
+          <div class="result-card result-card--highlight">
+            <div class="result-card__label">Total Value</div>
+            <div class="result-card__value" id="resTotal">—</div>
+          </div>
+        </div>
+
+        <div class="chart-wrap">
+          <div class="chart-wrap__title">Growth Breakdown</div>
+          <div style="display:grid;grid-template-columns:1fr 1.8fr;gap:2rem;align-items:center;">
+            <div style="position:relative;width:100%;max-width:200px;margin:auto;height:200px;">
+              <canvas id="donutChart"></canvas>
+            </div>
+            <div style="position:relative;width:100%;height:220px;">
+              <canvas id="barChart"></canvas>
+            </div>
+          </div>
+        </div>
+
+        <div class="table-wrap">
+          <div class="table-wrap__title">Year-by-Year Breakdown</div>
+          <div style="max-height:360px;overflow-y:auto;">
+            <table class="data-table">
+              <thead>
+                <tr>
+                  <th>Year</th>
+                  <th>Invested</th>
+                  <th>Returns</th>
+                  <th>Total Value</th>
+                </tr>
+              </thead>
+              <tbody id="yearlyTable"></tbody>
+            </table>
+          </div>
+        </div>
+
+      </div>
+    </div>
+  </div>
+
+  <footer class="footer" style="margin-top:3rem;">
+    <div class="container footer__inner">
+      <span class="brand-name" style="font-size:1rem;">◈ FinSim</span>
+      <span class="footer__note">For educational purposes only. Not financial advice.</span>
+    </div>
+  </footer>
+
+</body>
+</html>
