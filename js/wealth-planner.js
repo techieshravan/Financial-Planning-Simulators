@@ -5,7 +5,7 @@ const { formatINR, formatPct, bindSlider } = window.FinSim;
 let lineChart;
 
 // ── State ─────────────────────────────────────────────────
-let portfolio = 100000, monthly = 5000, stepup = 10, rate = 12, years = 15;
+let portfolio = 2950000, monthly = 40000, stepup = 10, rate = 12, years = 10;
 let activeCompareRates = new Set([0, 20]);
 
 // ── Constants ─────────────────────────────────────────────

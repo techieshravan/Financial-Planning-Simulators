@@ -3,14 +3,14 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>SIP Wealth Planner — FinSim</title>
+  <title>Custom SIP Planner — FinSim</title>
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet" />
   <link rel="stylesheet" href="../css/main.css" />
   <script defer src="../js/chart.umd.min.js"></script>
   <script defer src="../js/main.js"></script>
-  <script defer src="../js/wealth-planner.js"></script>
+  <script defer src="../js/custom-sip.js"></script>
 </head>
 <body>
 
@@ -32,9 +32,9 @@
   <div class="container">
     <div class="page-header">
       <a href="../index.html" class="back-link">← Back to all calculators</a>
-      <p class="page-header__eyebrow">SIP Wealth Planner</p>
-      <h1 class="page-header__title">Step-up SIP with Portfolio Tracker</h1>
-      <p class="page-header__subtitle">Start from your current portfolio, model step-up SIPs, compare multiple growth scenarios and track wealth milestones.</p>
+      <p class="page-header__eyebrow">Custom SIP Planner</p>
+      <h1 class="page-header__title">Set Your Own SIP for Every Year</h1>
+      <p class="page-header__subtitle">Start from your current portfolio and define a custom monthly SIP for each investment year — no fixed step-up formula needed.</p>
     </div>
 
     <div class="calc-layout">
@@ -46,37 +46,13 @@
         <div class="form-group">
           <div class="form-label">
             <span>Current Portfolio Value</span>
-            <span class="form-label-value" id="lblPortfolio">₹1,00,000</span>
+            <span class="form-label-value" id="lblPortfolio">₹29,50,000</span>
           </div>
           <div class="range-wrap">
             <input type="range" id="sliderPortfolio" min="0" max="10000000" step="10000" value="2950000" />
             <div class="range-ticks"><span>₹0</span><span>₹50L</span><span>₹1Cr</span></div>
           </div>
           <input type="number" id="inputPortfolio" class="form-input" style="margin-top:.75rem" min="0" max="10000000" step="10000" value="2950000" />
-        </div>
-
-        <div class="form-group">
-          <div class="form-label">
-            <span>Initial Monthly SIP</span>
-            <span class="form-label-value" id="lblMonthly">₹5,000</span>
-          </div>
-          <div class="range-wrap">
-            <input type="range" id="sliderMonthly" min="500" max="100000" step="500" value="40000" />
-            <div class="range-ticks"><span>₹500</span><span>₹50K</span><span>₹1L</span></div>
-          </div>
-          <input type="number" id="inputMonthly" class="form-input" style="margin-top:.75rem" min="500" max="100000" step="500" value="40000" />
-        </div>
-
-        <div class="form-group">
-          <div class="form-label">
-            <span>Annual Step-up Rate</span>
-            <span class="form-label-value" id="lblStepup">10%</span>
-          </div>
-          <div class="range-wrap">
-            <input type="range" id="sliderStepup" min="0" max="50" step="1" value="10" />
-            <div class="range-ticks"><span>0%</span><span>25%</span><span>50%</span></div>
-          </div>
-          <input type="number" id="inputStepup" class="form-input" style="margin-top:.75rem" min="0" max="50" step="1" value="10" />
         </div>
 
         <div class="form-group">
@@ -94,7 +70,7 @@
         <div class="form-group">
           <div class="form-label">
             <span>Investment Period</span>
-            <span class="form-label-value" id="lblYears">15 yrs</span>
+            <span class="form-label-value" id="lblYears">10 yrs</span>
           </div>
           <div class="range-wrap">
             <input type="range" id="sliderYears" min="1" max="40" step="1" value="10" />
@@ -103,19 +79,22 @@
           <input type="number" id="inputYears" class="form-input" style="margin-top:.75rem" min="1" max="40" step="1" value="10" />
         </div>
 
-        <!-- Compare chips -->
+        <!-- Year-by-year SIP table -->
         <div class="form-group" style="border-top:1px solid var(--color-border);padding-top:1rem;">
-          <div class="form-label" style="margin-bottom:.25rem;">
-            <span>Compare Step-up Rates</span>
+          <div class="form-label" style="margin-bottom:.5rem;">
+            <span>Monthly SIP — Year by Year</span>
           </div>
-          <p style="font-size:.72rem;color:var(--color-text-muted);margin-bottom:.5rem;">Toggle rates to add comparison lines on the chart</p>
-          <div class="chip-group">
-            <button class="chip chip--active" data-rate="0">0%</button>
-            <button class="chip"             data-rate="5">5%</button>
-            <button class="chip"             data-rate="10">10%</button>
-            <button class="chip"             data-rate="15">15%</button>
-            <button class="chip chip--active" data-rate="20">20%</button>
-            <button class="chip"             data-rate="25">25%</button>
+
+          <!-- Quick-fill helpers -->
+          <div class="quick-fill-bar">
+            <span style="font-size:.7rem;color:var(--color-text-muted);flex-shrink:0;">Auto-fill:</span>
+            <button class="chip" id="qfFlat">Flat</button>
+            <button class="chip" id="qfStep10">+10%/yr</button>
+            <button class="chip" id="qfStep20">+20%/yr</button>
+          </div>
+
+          <div class="sip-year-table" id="sipYearTable">
+            <!-- Dynamically populated by custom-sip.js -->
           </div>
         </div>
       </aside>
@@ -157,35 +136,35 @@
           </div>
         </div>
 
-        <!-- Info boxes row -->
+        <!-- Info boxes -->
         <div class="info-row">
           <div class="info-box">
             <div class="info-box__label">Matures by</div>
             <div class="info-box__value" id="maturityDate">—</div>
           </div>
           <div class="info-box">
-            <div class="info-box__label">Final monthly SIP</div>
-            <div class="info-box__value" id="finalMonthly">—</div>
+            <div class="info-box__label">Total SIP added</div>
+            <div class="info-box__value" id="totalSIPContrib">—</div>
           </div>
           <div class="info-box info-box--accent">
             <div class="info-box__label">Wealth multiple</div>
             <div class="info-box__value" id="wealthMultiple">—</div>
           </div>
           <div class="info-box">
-            <div class="info-box__label">Step-up advantage</div>
-            <div class="info-box__value" style="color:#10b981;" id="stepupGain">—</div>
+            <div class="info-box__label">vs Flat SIP</div>
+            <div class="info-box__value" id="vsFlat">—</div>
           </div>
         </div>
 
-        <!-- Growth Chart -->
+        <!-- Growth chart -->
         <div class="chart-wrap">
-          <div class="chart-wrap__title">Portfolio Growth — Step-up Rate Comparison</div>
+          <div class="chart-wrap__title">Portfolio Growth — Custom Plan vs Flat SIP</div>
           <div style="position:relative;width:100%;height:280px;">
             <canvas id="lineChart"></canvas>
           </div>
         </div>
 
-        <!-- Milestones Table -->
+        <!-- Milestones -->
         <div class="table-wrap">
           <div class="table-wrap__title">Wealth Milestones</div>
           <div style="max-height:280px;overflow-y:auto;">
@@ -203,29 +182,10 @@
           </div>
         </div>
 
-        <!-- Step-up Rate Comparison Table -->
-        <div class="table-wrap">
-          <div class="table-wrap__title">Step-up Rate Comparison (at maturity)</div>
-          <div style="overflow-x:auto;">
-            <table class="data-table">
-              <thead>
-                <tr>
-                  <th>Step-up Rate</th>
-                  <th>Total Value</th>
-                  <th>Invested</th>
-                  <th>Returns</th>
-                  <th>Wealth ×</th>
-                </tr>
-              </thead>
-              <tbody id="comparisonTable"></tbody>
-            </table>
-          </div>
-        </div>
-
-        <!-- Year-by-Year Breakdown -->
+        <!-- Year-by-year breakdown -->
         <div class="table-wrap">
           <div class="table-wrap__title">Year-by-Year Breakdown</div>
-          <div style="max-height:360px;overflow-y:auto;">
+          <div style="max-height:380px;overflow-y:auto;">
             <table class="data-table">
               <thead>
                 <tr>
