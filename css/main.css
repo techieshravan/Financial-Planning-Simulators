@@ -788,3 +788,153 @@ input[type="range"]::-webkit-slider-thumb:hover {
   .results-summary { grid-template-columns: 1fr; }
   .footer__inner { flex-direction: column; text-align: center; }
 }
+
+/* ── Summary Bar Widget ─────────────────────────────────── */
+.summary-bar-widget {
+  background: var(--card-bg);
+  border: 1px solid var(--border);
+  border-radius: 16px;
+  padding: 1.5rem 1.75rem 1.75rem;
+  margin-bottom: 1.5rem;
+}
+
+.summary-bar-legend {
+  display: flex;
+  gap: 0.75rem 2.5rem;
+  flex-wrap: wrap;
+  margin-bottom: 1.375rem;
+  align-items: flex-start;
+}
+
+.summary-bar-item {
+  display: flex;
+  align-items: flex-start;
+  gap: 0.625rem;
+  flex: 1;
+  min-width: 130px;
+}
+
+.summary-bar-item--no-dot {
+  padding-left: 1.375rem;
+}
+
+.summary-bar-dot {
+  width: 11px;
+  height: 11px;
+  border-radius: 50%;
+  margin-top: 5px;
+  flex-shrink: 0;
+}
+
+.summary-bar-dot--invested { background: #f97316; }
+.summary-bar-dot--returns  { background: #3b82f6; }
+
+.summary-bar-item__label {
+  font-size: 0.7rem;
+  font-weight: 600;
+  color: var(--text-muted);
+  margin-bottom: 0.25rem;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+}
+
+.summary-bar-item__value {
+  font-size: 1.2rem;
+  font-weight: 700;
+  color: var(--text-primary);
+  font-variant-numeric: tabular-nums;
+  line-height: 1.25;
+}
+
+.summary-bar-item__value--total {
+  color: var(--accent);
+  font-size: 1.3rem;
+}
+
+.summary-bar-track {
+  display: flex;
+  height: 52px;
+  border-radius: 10px;
+  overflow: hidden;
+}
+
+.summary-bar-fill {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: width 0.45s cubic-bezier(0.4, 0, 0.2, 1);
+  font-size: 0.875rem;
+  font-weight: 700;
+  color: #fff;
+  white-space: nowrap;
+  min-width: 0;
+  overflow: hidden;
+}
+
+.summary-bar-fill--invested { background: #f97316; }
+.summary-bar-fill--returns  { background: #3b82f6; }
+
+@media (max-width: 640px) {
+  .summary-bar-legend { gap: 1rem; }
+  .summary-bar-item { min-width: 120px; }
+  .summary-bar-item__value { font-size: 1rem; }
+  .summary-bar-track { height: 44px; }
+}
+
+/* ── Comparison Chips ─────────────────────────────────── */
+.chip-group {
+  display: flex;
+  flex-wrap: wrap;
+  gap: .375rem;
+  margin-top: .5rem;
+}
+
+.chip {
+  padding: .2rem .6rem;
+  border-radius: 999px;
+  font-size: .72rem;
+  font-weight: 600;
+  border: 1.5px solid var(--color-border);
+  background: transparent;
+  color: var(--color-text-muted);
+  cursor: pointer;
+  transition: background .15s, border-color .15s, color .15s;
+  line-height: 1.6;
+}
+
+.chip:hover { border-color: var(--color-accent); color: var(--color-accent); }
+.chip--active { background: var(--color-accent); border-color: var(--color-accent); color: #fff; }
+
+/* ── Info Row (callouts below summary bar) ────────────── */
+.info-row {
+  display: flex;
+  gap: 1rem;
+  flex-wrap: wrap;
+}
+
+.info-box {
+  flex: 1;
+  min-width: 140px;
+  padding: .85rem 1rem;
+  background: var(--color-surface-2);
+  border: 1px solid var(--color-border);
+  border-radius: .75rem;
+}
+
+.info-box__label {
+  font-size: .7rem;
+  font-weight: 600;
+  color: var(--color-text-muted);
+  text-transform: uppercase;
+  letter-spacing: .05em;
+  margin-bottom: .25rem;
+}
+
+.info-box__value {
+  font-size: 1.05rem;
+  font-weight: 700;
+  color: var(--color-text);
+  font-variant-numeric: tabular-nums;
+}
+
+.info-box--accent .info-box__value { color: var(--color-accent); }

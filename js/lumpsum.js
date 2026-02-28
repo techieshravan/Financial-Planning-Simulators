@@ -2,7 +2,7 @@
 (function () {
 const { formatINR, formatPct, bindSlider } = window.FinSim;
 
-let donutChart, lineChart;
+let lineChart;
 
 function buildYearlyData(amount, rate, years) {
   const rows = [];
@@ -31,43 +31,27 @@ function renderResults(amount, rate, years) {
   const total = last.closing;
   const gains = total - amount;
 
-  document.getElementById('resInvested').textContent = formatINR(amount, true);
-  document.getElementById('resReturns').textContent  = formatINR(gains,  true);
-  document.getElementById('resTotal').textContent    = formatINR(total,  true);
+  document.getElementById('resInvested').textContent = formatINR(amount);
+  document.getElementById('resReturns').textContent  = formatINR(gains);
+  document.getElementById('resTotal').textContent    = formatINR(total);
+
+  // Update stacked bar widths + percentage labels
+  const invPct = (amount / total * 100);
+  const retPct = 100 - invPct;
+  document.getElementById('barFillInvested').style.width = invPct.toFixed(2) + '%';
+  document.getElementById('barFillReturns').style.width  = retPct.toFixed(2) + '%';
+  document.getElementById('pctInvested').textContent = Math.round(invPct) + '%';
+  document.getElementById('pctReturns').textContent  = Math.round(retPct) + '%';
 
   const doubling = (72 / rate).toFixed(1);
   document.getElementById('doublingTime').textContent = `${doubling} yrs`;
 
-  renderCharts(amount, gains, rows);
+  renderChart(amount, rows);
   renderTable(rows);
 }
 
-function renderCharts(invested, returns, rows) {
+function renderChart(invested, rows) {
   const c = getChartColors();
-
-  if (donutChart) donutChart.destroy();
-  donutChart = new Chart(document.getElementById('donutChart'), {
-    type: 'doughnut',
-    data: {
-      labels: ['Invested', 'Est. Returns'],
-      datasets: [{
-        data: [invested, returns],
-        backgroundColor: ['#f59e0b', '#10b981'],
-        borderColor: c.border,
-        borderWidth: 3,
-        hoverOffset: 6,
-      }],
-    },
-    options: {
-      responsive: true,
-      maintainAspectRatio: false,
-      cutout: '72%',
-      plugins: {
-        legend: { display: false },
-        tooltip: { callbacks: { label: ctx => ` ${formatINR(ctx.raw, true)}` } },
-      },
-    },
-  });
 
   if (lineChart) lineChart.destroy();
   lineChart = new Chart(document.getElementById('lineChart'), {

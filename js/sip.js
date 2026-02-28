@@ -2,11 +2,11 @@
 (function () {
 const { formatINR, formatPct, bindSlider } = window.FinSim;
 
-let donutChart, barChart;
+let barChart;
 
 function calcSIP(monthly, rate, years) {
   const n = years * 12;
-  const r = rate / 100 / 12;
+  const r = Math.pow(1 + rate / 100, 1 / 12) - 1;
   const futureValue = monthly * ((Math.pow(1 + r, n) - 1) / r) * (1 + r);
   const invested = monthly * n;
   const returns  = futureValue - invested;
@@ -25,12 +25,21 @@ function buildYearlyData(monthly, rate, years) {
 function renderResults(monthly, rate, years) {
   const { futureValue, invested, returns } = calcSIP(monthly, rate, years);
 
-  document.getElementById('resInvested').textContent = formatINR(invested, true);
-  document.getElementById('resReturns').textContent  = formatINR(returns,  true);
-  document.getElementById('resTotal').textContent    = formatINR(futureValue, true);
+  document.getElementById('resInvested').textContent = formatINR(invested);
+  document.getElementById('resReturns').textContent  = formatINR(returns);
+  document.getElementById('resTotal').textContent    = formatINR(futureValue);
 
-  renderCharts(invested, returns, buildYearlyData(monthly, rate, years));
-  renderTable(buildYearlyData(monthly, rate, years));
+  // Update stacked bar widths + percentage labels
+  const invPct = (invested / futureValue * 100);
+  const retPct = 100 - invPct;
+  document.getElementById('barFillInvested').style.width = invPct.toFixed(2) + '%';
+  document.getElementById('barFillReturns').style.width  = retPct.toFixed(2) + '%';
+  document.getElementById('pctInvested').textContent = Math.round(invPct) + '%';
+  document.getElementById('pctReturns').textContent  = Math.round(retPct) + '%';
+
+  const yearly = buildYearlyData(monthly, rate, years);
+  renderCharts(invested, returns, yearly);
+  renderTable(yearly);
 }
 
 function getChartColors() {
@@ -45,32 +54,6 @@ function getChartColors() {
 function renderCharts(invested, returns, yearly) {
   const c = getChartColors();
 
-  if (donutChart) donutChart.destroy();
-  donutChart = new Chart(document.getElementById('donutChart'), {
-    type: 'doughnut',
-    data: {
-      labels: ['Invested', 'Est. Returns'],
-      datasets: [{
-        data: [invested, returns],
-        backgroundColor: ['#4f46e5', '#10b981'],
-        borderColor: c.border,
-        borderWidth: 3,
-        hoverOffset: 6,
-      }],
-    },
-    options: {
-      responsive: true,
-      maintainAspectRatio: false,
-      cutout: '72%',
-      plugins: {
-        legend: { display: false },
-        tooltip: {
-          callbacks: { label: ctx => ` ${formatINR(ctx.raw, true)}` },
-        },
-      },
-    },
-  });
-
   if (barChart) barChart.destroy();
   barChart = new Chart(document.getElementById('barChart'), {
     type: 'bar',
@@ -80,14 +63,14 @@ function renderCharts(invested, returns, yearly) {
         {
           label: 'Invested',
           data: yearly.map(r => r.invested),
-          backgroundColor: 'rgba(79,70,229,0.85)',
+          backgroundColor: 'rgba(249,115,22,0.9)',
           borderRadius: 4,
           borderSkipped: false,
         },
         {
           label: 'Returns',
           data: yearly.map(r => r.returns),
-          backgroundColor: 'rgba(16,185,129,0.85)',
+          backgroundColor: 'rgba(59,130,246,0.9)',
           borderRadius: 4,
           borderSkipped: false,
         },

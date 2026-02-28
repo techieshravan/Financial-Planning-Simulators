@@ -5,7 +5,7 @@ const { formatINR, formatPct, bindSlider } = window.FinSim;
 let lineChart;
 
 function buildStepupData(initMonthly, stepupPct, rate, years) {
-  const monthlyRate = rate / 100 / 12;
+  const monthlyRate = Math.pow(1 + rate / 100, 1 / 12) - 1;
   let corpusStart = 0;
   let totalInvested = 0;
   const rows = [];
@@ -14,7 +14,7 @@ function buildStepupData(initMonthly, stepupPct, rate, years) {
     const monthlyAmt = initMonthly * Math.pow(1 + stepupPct / 100, y - 1);
     let corpus = corpusStart;
     for (let m = 0; m < 12; m++) {
-      corpus = corpus * (1 + monthlyRate) + monthlyAmt;
+      corpus = (corpus + monthlyAmt) * (1 + monthlyRate);
       totalInvested += monthlyAmt;
     }
     corpusStart = corpus;
@@ -31,7 +31,7 @@ function buildStepupData(initMonthly, stepupPct, rate, years) {
 
 function regularSIPValue(monthly, rate, years) {
   const n = years * 12;
-  const r = rate / 100 / 12;
+  const r = Math.pow(1 + rate / 100, 1 / 12) - 1;
   return monthly * ((Math.pow(1 + r, n) - 1) / r) * (1 + r);
 }
 
@@ -39,7 +39,7 @@ function buildRegularData(monthly, rate, years) {
   const rows = [];
   for (let y = 1; y <= years; y++) {
     const n = y * 12;
-    const r = rate / 100 / 12;
+    const r = Math.pow(1 + rate / 100, 1 / 12) - 1;
     const fv = monthly * ((Math.pow(1 + r, n) - 1) / r) * (1 + r);
     rows.push({ year: y, total: fv });
   }
@@ -60,9 +60,17 @@ function renderResults(initMonthly, stepupPct, rate, years) {
   const last = stepupRows[stepupRows.length - 1];
   const regFV = regularRows[regularRows.length - 1].total;
 
-  document.getElementById('resInvested').textContent = formatINR(last.invested, true);
-  document.getElementById('resReturns').textContent  = formatINR(last.returns,  true);
-  document.getElementById('resTotal').textContent    = formatINR(last.total,    true);
+  document.getElementById('resInvested').textContent = formatINR(last.invested);
+  document.getElementById('resReturns').textContent  = formatINR(last.returns);
+  document.getElementById('resTotal').textContent    = formatINR(last.total);
+
+  // Update stacked bar widths + percentage labels
+  const invPct = (last.invested / last.total * 100);
+  const retPct = 100 - invPct;
+  document.getElementById('barFillInvested').style.width = invPct.toFixed(2) + '%';
+  document.getElementById('barFillReturns').style.width  = retPct.toFixed(2) + '%';
+  document.getElementById('pctInvested').textContent = Math.round(invPct) + '%';
+  document.getElementById('pctReturns').textContent  = Math.round(retPct) + '%';
 
   document.getElementById('regularSIPValue').textContent = formatINR(regFV, true);
   const extra = ((last.total - regFV) / regFV * 100).toFixed(1);

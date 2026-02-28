@@ -87,42 +87,44 @@
 
       <div class="results-panel">
 
-        <div class="results-summary">
-          <div class="result-card">
-            <div class="result-card__label">Invested</div>
-            <div class="result-card__value" id="resInvested">—</div>
+        <!-- ── Summary Bar Widget ──────────────────────────── -->
+        <div class="summary-bar-widget">
+          <div class="summary-bar-legend">
+            <div class="summary-bar-item">
+              <span class="summary-bar-dot summary-bar-dot--invested"></span>
+              <div>
+                <div class="summary-bar-item__label">Invested amount</div>
+                <div class="summary-bar-item__value" id="resInvested">—</div>
+              </div>
+            </div>
+            <div class="summary-bar-item">
+              <span class="summary-bar-dot summary-bar-dot--returns"></span>
+              <div>
+                <div class="summary-bar-item__label">Estimated returns</div>
+                <div class="summary-bar-item__value" id="resReturns">—</div>
+              </div>
+            </div>
+            <div class="summary-bar-item summary-bar-item--no-dot">
+              <div>
+                <div class="summary-bar-item__label">Total value</div>
+                <div class="summary-bar-item__value summary-bar-item__value--total" id="resTotal">—</div>
+              </div>
+            </div>
           </div>
-          <div class="result-card">
-            <div class="result-card__label">Est. Returns</div>
-            <div class="result-card__value" id="resReturns">—</div>
-          </div>
-          <div class="result-card result-card--highlight">
-            <div class="result-card__label">Total Value</div>
-            <div class="result-card__value" id="resTotal">—</div>
+          <div class="summary-bar-track">
+            <div class="summary-bar-fill summary-bar-fill--invested" id="barFillInvested" style="width:56%">
+              <span id="pctInvested">56%</span>
+            </div>
+            <div class="summary-bar-fill summary-bar-fill--returns" id="barFillReturns" style="width:44%">
+              <span id="pctReturns">44%</span>
+            </div>
           </div>
         </div>
 
-        <div style="display:grid;grid-template-columns:1fr 1fr;gap:1.5rem;">
-          <div class="chart-wrap">
-            <div class="chart-wrap__title">Composition</div>
-            <div style="position:relative;width:100%;max-width:200px;margin:auto;height:200px;">
-              <canvas id="donutChart"></canvas>
-            </div>
-            <div style="display:flex;gap:1rem;justify-content:center;margin-top:1rem;">
-              <div style="display:flex;align-items:center;gap:.4rem;font-size:.75rem;color:var(--color-text-muted);">
-                <span style="width:10px;height:10px;border-radius:50%;background:#f59e0b;display:block;"></span>Invested
-              </div>
-              <div style="display:flex;align-items:center;gap:.4rem;font-size:.75rem;color:var(--color-text-muted);">
-                <span style="width:10px;height:10px;border-radius:50%;background:#10b981;display:block;"></span>Returns
-              </div>
-            </div>
-          </div>
-
-          <div class="chart-wrap">
-            <div class="chart-wrap__title">Growth Over Time</div>
-            <div style="position:relative;width:100%;height:220px;">
-              <canvas id="lineChart"></canvas>
-            </div>
+        <div class="chart-wrap">
+          <div class="chart-wrap__title">Growth Over Time</div>
+          <div style="position:relative;width:100%;height:240px;">
+            <canvas id="lineChart"></canvas>
           </div>
         </div>
 

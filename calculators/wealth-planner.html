@@ -3,14 +3,14 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Step-up SIP Calculator — FinSim</title>
+  <title>SIP Wealth Planner — FinSim</title>
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet" />
   <link rel="stylesheet" href="../css/main.css" />
   <script defer src="../js/chart.umd.min.js"></script>
   <script defer src="../js/main.js"></script>
-  <script defer src="../js/stepup-sip.js"></script>
+  <script defer src="../js/wealth-planner.js"></script>
 </head>
 <body>
 
@@ -32,15 +32,28 @@
   <div class="container">
     <div class="page-header">
       <a href="../index.html" class="back-link">← Back to all calculators</a>
-      <p class="page-header__eyebrow">Step-up SIP Calculator</p>
-      <h1 class="page-header__title">Step-up Systematic Investment Plan</h1>
-      <p class="page-header__subtitle">Increase your SIP amount each year to keep pace with income growth and maximise long-term wealth.</p>
+      <p class="page-header__eyebrow">SIP Wealth Planner</p>
+      <h1 class="page-header__title">Step-up SIP with Portfolio Tracker</h1>
+      <p class="page-header__subtitle">Start from your current portfolio, model step-up SIPs, compare multiple growth scenarios and track wealth milestones.</p>
     </div>
 
     <div class="calc-layout">
 
+      <!-- ── Inputs ──────────────────────────────────────────── -->
       <aside class="inputs-panel">
         <p class="inputs-panel__title">Parameters</p>
+
+        <div class="form-group">
+          <div class="form-label">
+            <span>Current Portfolio Value</span>
+            <span class="form-label-value" id="lblPortfolio">₹1,00,000</span>
+          </div>
+          <div class="range-wrap">
+            <input type="range" id="sliderPortfolio" min="0" max="10000000" step="10000" value="100000" />
+            <div class="range-ticks"><span>₹0</span><span>₹50L</span><span>₹1Cr</span></div>
+          </div>
+          <input type="number" id="inputPortfolio" class="form-input" style="margin-top:.75rem" min="0" max="10000000" step="10000" value="100000" />
+        </div>
 
         <div class="form-group">
           <div class="form-label">
@@ -90,17 +103,27 @@
           <input type="number" id="inputYears" class="form-input" style="margin-top:.75rem" min="1" max="40" step="1" value="15" />
         </div>
 
-        <div style="padding:1rem;background:rgba(99,102,241,0.08);border:1px solid rgba(99,102,241,0.2);border-radius:.75rem;margin-top:.5rem;">
-          <p style="font-size:.75rem;font-weight:600;color:#a5b4fc;text-transform:uppercase;letter-spacing:.05em;margin-bottom:.5rem;">vs Regular SIP</p>
-          <p style="font-size:.8rem;color:var(--color-text-muted);">Regular SIP total value:</p>
-          <p style="font-size:1.1rem;font-weight:700;color:var(--color-text);" id="regularSIPValue">—</p>
-          <p style="font-size:.75rem;color:#10b981;font-weight:600;margin-top:.25rem;" id="extraGain">+0% extra with step-up</p>
+        <!-- Compare chips -->
+        <div class="form-group" style="border-top:1px solid var(--color-border);padding-top:1rem;">
+          <div class="form-label" style="margin-bottom:.25rem;">
+            <span>Compare Step-up Rates</span>
+          </div>
+          <p style="font-size:.72rem;color:var(--color-text-muted);margin-bottom:.5rem;">Toggle rates to add comparison lines on the chart</p>
+          <div class="chip-group">
+            <button class="chip chip--active" data-rate="0">0%</button>
+            <button class="chip"             data-rate="5">5%</button>
+            <button class="chip"             data-rate="10">10%</button>
+            <button class="chip"             data-rate="15">15%</button>
+            <button class="chip chip--active" data-rate="20">20%</button>
+            <button class="chip"             data-rate="25">25%</button>
+          </div>
         </div>
       </aside>
 
+      <!-- ── Results ─────────────────────────────────────────── -->
       <div class="results-panel">
 
-        <!-- ── Summary Bar Widget ──────────────────────────── -->
+        <!-- Summary Bar Widget -->
         <div class="summary-bar-widget">
           <div class="summary-bar-legend">
             <div class="summary-bar-item">
@@ -125,22 +148,81 @@
             </div>
           </div>
           <div class="summary-bar-track">
-            <div class="summary-bar-fill summary-bar-fill--invested" id="barFillInvested" style="width:56%">
-              <span id="pctInvested">56%</span>
+            <div class="summary-bar-fill summary-bar-fill--invested" id="barFillInvested" style="width:40%">
+              <span id="pctInvested">40%</span>
             </div>
-            <div class="summary-bar-fill summary-bar-fill--returns" id="barFillReturns" style="width:44%">
-              <span id="pctReturns">44%</span>
+            <div class="summary-bar-fill summary-bar-fill--returns" id="barFillReturns" style="width:60%">
+              <span id="pctReturns">60%</span>
             </div>
           </div>
         </div>
 
+        <!-- Info boxes row -->
+        <div class="info-row">
+          <div class="info-box">
+            <div class="info-box__label">Matures by</div>
+            <div class="info-box__value" id="maturityDate">—</div>
+          </div>
+          <div class="info-box">
+            <div class="info-box__label">Final monthly SIP</div>
+            <div class="info-box__value" id="finalMonthly">—</div>
+          </div>
+          <div class="info-box info-box--accent">
+            <div class="info-box__label">Wealth multiple</div>
+            <div class="info-box__value" id="wealthMultiple">—</div>
+          </div>
+          <div class="info-box">
+            <div class="info-box__label">Step-up advantage</div>
+            <div class="info-box__value" style="color:#10b981;" id="stepupGain">—</div>
+          </div>
+        </div>
+
+        <!-- Growth Chart -->
         <div class="chart-wrap">
-          <div class="chart-wrap__title">Step-up vs Regular SIP Growth</div>
+          <div class="chart-wrap__title">Portfolio Growth — Step-up Rate Comparison</div>
           <div style="position:relative;width:100%;height:280px;">
             <canvas id="lineChart"></canvas>
           </div>
         </div>
 
+        <!-- Milestones Table -->
+        <div class="table-wrap">
+          <div class="table-wrap__title">Wealth Milestones</div>
+          <div style="max-height:280px;overflow-y:auto;">
+            <table class="data-table">
+              <thead>
+                <tr>
+                  <th>Milestone</th>
+                  <th>Reached By</th>
+                  <th>Investment Year</th>
+                  <th>Monthly SIP then</th>
+                </tr>
+              </thead>
+              <tbody id="milestonesTable"></tbody>
+            </table>
+          </div>
+        </div>
+
+        <!-- Step-up Rate Comparison Table -->
+        <div class="table-wrap">
+          <div class="table-wrap__title">Step-up Rate Comparison (at maturity)</div>
+          <div style="overflow-x:auto;">
+            <table class="data-table">
+              <thead>
+                <tr>
+                  <th>Step-up Rate</th>
+                  <th>Total Value</th>
+                  <th>Invested</th>
+                  <th>Returns</th>
+                  <th>Wealth ×</th>
+                </tr>
+              </thead>
+              <tbody id="comparisonTable"></tbody>
+            </table>
+          </div>
+        </div>
+
+        <!-- Year-by-Year Breakdown -->
         <div class="table-wrap">
           <div class="table-wrap__title">Year-by-Year Breakdown</div>
           <div style="max-height:360px;overflow-y:auto;">
@@ -148,6 +230,7 @@
               <thead>
                 <tr>
                   <th>Year</th>
+                  <th>Month-Year</th>
                   <th>Monthly SIP</th>
                   <th>Invested</th>
                   <th>Returns</th>
