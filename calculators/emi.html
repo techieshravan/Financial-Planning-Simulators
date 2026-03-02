@@ -1,0 +1,165 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>EMI Calculator — FinSim</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="../css/main.css" />
+  <script defer src="../js/chart.umd.min.js"></script>
+  <script defer src="../js/main.js"></script>
+  <script defer src="../js/emi.js"></script>
+</head>
+<body>
+
+  <!-- ── Nav ───────────────────────────────────────────────── -->
+  <header class="navbar">
+    <div class="container navbar__inner">
+      <a href="../index.html" class="navbar__brand">
+        <span class="brand-icon">◈</span>
+        <span class="brand-name">FinSim</span>
+      </a>
+      <nav class="navbar__links">
+        <a href="../index.html#calculators">Calculators</a>
+      </nav>
+      <button class="theme-toggle" id="themeToggle" aria-label="Toggle theme">
+        <span class="theme-icon">☀</span>
+      </button>
+    </div>
+  </header>
+
+  <div class="container">
+    <div class="page-header">
+      <a href="../index.html" class="back-link">← Back to all calculators</a>
+      <p class="page-header__eyebrow">EMI Calculator</p>
+      <h1 class="page-header__title">Loan EMI Calculator</h1>
+      <p class="page-header__subtitle">Calculate your monthly instalment, total interest, and see a full year-by-year amortisation breakdown.</p>
+    </div>
+
+    <div class="calc-layout">
+
+      <!-- ── Inputs ────────────────────────────────────────── -->
+      <aside class="inputs-panel">
+        <p class="inputs-panel__title">Parameters</p>
+
+        <div class="form-group">
+          <div class="form-label">
+            <span>Loan Amount</span>
+            <span class="form-label-value" id="lblPrincipal">₹30,00,000</span>
+          </div>
+          <div class="range-wrap">
+            <input type="range" id="sliderPrincipal" min="100000" max="10000000" step="100000" value="3000000" />
+            <div class="range-ticks"><span>₹1L</span><span>₹50L</span><span>₹1Cr</span></div>
+          </div>
+          <input type="number" id="inputPrincipal" class="form-input" style="margin-top:.75rem" min="100000" max="10000000" step="100000" value="3000000" />
+        </div>
+
+        <div class="form-group">
+          <div class="form-label">
+            <span>Annual Interest Rate</span>
+            <span class="form-label-value" id="lblRate">8.5%</span>
+          </div>
+          <div class="range-wrap">
+            <input type="range" id="sliderRate" min="6" max="20" step="0.1" value="8.5" />
+            <div class="range-ticks"><span>6%</span><span>13%</span><span>20%</span></div>
+          </div>
+          <input type="number" id="inputRate" class="form-input" style="margin-top:.75rem" min="6" max="20" step="0.1" value="8.5" />
+        </div>
+
+        <div class="form-group">
+          <div class="form-label">
+            <span>Loan Tenure</span>
+            <span class="form-label-value" id="lblYears">20 yrs</span>
+          </div>
+          <div class="range-wrap">
+            <input type="range" id="sliderYears" min="1" max="30" step="1" value="20" />
+            <div class="range-ticks"><span>1yr</span><span>15yr</span><span>30yr</span></div>
+          </div>
+          <input type="number" id="inputYears" class="form-input" style="margin-top:.75rem" min="1" max="30" step="1" value="20" />
+        </div>
+      </aside>
+
+      <!-- ── Results ───────────────────────────────────────── -->
+      <div class="results-panel">
+
+        <!-- Monthly EMI highlight -->
+        <div class="info-row">
+          <div class="info-box info-box--accent" style="padding:1.25rem 1.5rem;">
+            <div class="info-box__label">Monthly EMI</div>
+            <div class="info-box__value" id="resEMI" style="font-size:1.6rem;">—</div>
+          </div>
+        </div>
+
+        <!-- ── Summary Bar Widget ──────────────────────────── -->
+        <div class="summary-bar-widget">
+          <div class="summary-bar-legend">
+            <div class="summary-bar-item">
+              <span class="summary-bar-dot summary-bar-dot--invested"></span>
+              <div>
+                <div class="summary-bar-item__label">Loan principal</div>
+                <div class="summary-bar-item__value" id="resInvested">—</div>
+              </div>
+            </div>
+            <div class="summary-bar-item">
+              <span class="summary-bar-dot summary-bar-dot--returns"></span>
+              <div>
+                <div class="summary-bar-item__label">Total interest</div>
+                <div class="summary-bar-item__value" id="resReturns">—</div>
+              </div>
+            </div>
+            <div class="summary-bar-item summary-bar-item--no-dot">
+              <div>
+                <div class="summary-bar-item__label">Total payable</div>
+                <div class="summary-bar-item__value summary-bar-item__value--total" id="resTotal">—</div>
+              </div>
+            </div>
+          </div>
+          <div class="summary-bar-track">
+            <div class="summary-bar-fill summary-bar-fill--invested" id="barFillInvested" style="width:56%">
+              <span id="pctInvested">56%</span>
+            </div>
+            <div class="summary-bar-fill summary-bar-fill--returns" id="barFillReturns" style="width:44%">
+              <span id="pctReturns">44%</span>
+            </div>
+          </div>
+        </div>
+
+        <div class="chart-wrap">
+          <div class="chart-wrap__title">Year-by-Year Repayment Breakdown</div>
+          <div style="position:relative;width:100%;height:240px;">
+            <canvas id="barChart"></canvas>
+          </div>
+        </div>
+
+        <div class="table-wrap">
+          <div class="table-wrap__title">Amortisation Schedule</div>
+          <div style="max-height:360px;overflow-y:auto;">
+            <table class="data-table">
+              <thead>
+                <tr>
+                  <th>Year</th>
+                  <th>Principal Paid</th>
+                  <th>Interest Paid</th>
+                  <th>Balance</th>
+                </tr>
+              </thead>
+              <tbody id="yearlyTable"></tbody>
+            </table>
+          </div>
+        </div>
+
+      </div>
+    </div>
+  </div>
+
+  <footer class="footer" style="margin-top:3rem;">
+    <div class="container footer__inner">
+      <span class="brand-name" style="font-size:1rem;">◈ FinSim</span>
+      <span class="footer__note">For educational purposes only. Not financial advice.</span>
+    </div>
+  </footer>
+
+</body>
+</html>
